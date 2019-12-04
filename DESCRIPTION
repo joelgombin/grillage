@@ -1,0 +1,24 @@
+Package: grillage
+Title: Cree des bureaux de vote a partir d'une grille
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Joel",
+           family = "Gombin",
+           role = c("aut", "cre"),
+           email = "joel.gombin@gmail.com",
+           comment = c(ORCID = "0000-0002-9459-4473"))
+Description: Permet de creer des contours de bureaux de vote a partir de la liste electorale, en utilisant uen methode fondee sur la creation d'une grille.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Imports: 
+    sf,
+    readr,
+    banR,
+    magrittr,
+    dplyr,
+    stringr,
+    purrr,
+    rlang,
+    glue
+RoxygenNote: 7.0.1
