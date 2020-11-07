@@ -94,7 +94,7 @@ gr_get_enveloppe <- function(code_insee) {
 #' @export
 #'
 
-gr_list_to_bv <- function(path, code_insee, n = c(50, 50), confidence_level = 0.6,
+gr_list_to_bv <- function(path, code_insee, n = c(150, 150), confidence_level = 0.6,
                         numero_bv = `numéro du bureau de vote`,
                         numero_voie = NumeroVoie,
                         libelle_voie = LibelleVoie,
