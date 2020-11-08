@@ -1,0 +1,53 @@
+---
+title: "benchmark"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{benchmark}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  cache = TRUE
+)
+```
+
+```{r setup}
+library(grillage)
+library(tictoc)
+```
+
+```{r}
+tic()
+version1 <- gr_list_to_bv("../data-raw/ListesArrêtées-com75115-24-02-2020-06h54.xlsx", code_insee = "75056", n = c(50, 50), confidence_level = 0.6)
+toc()
+
+tic()
+version2 <- gr_list_to_bv("../data-raw/ListesArrêtées-com75115-24-02-2020-06h54.xlsx", code_insee = "75056", n = c(100, 100), confidence_level = 0.6)
+toc()
+
+tic()
+version3 <- gr_list_to_bv("../data-raw/ListesArrêtées-com75115-24-02-2020-06h54.xlsx", code_insee = "75056", n = c(150, 150), confidence_level = 0.6)
+toc()
+
+tic()
+version4 <- gr_list_to_bv("../data-raw/ListesArrêtées-com75115-24-02-2020-06h54.xlsx", code_insee = "75056", n = c(50, 50), confidence_level = 0.8)
+toc()
+
+tic()
+version5 <- gr_list_to_bv("../data-raw/ListesArrêtées-com75115-24-02-2020-06h54.xlsx", code_insee = "75056", n = c(100, 100), confidence_level = 0.8)
+toc()
+
+tic()
+version6 <- gr_list_to_bv("../data-raw/ListesArrêtées-com75115-24-02-2020-06h54.xlsx", code_insee = "75056", n = c(150, 150), confidence_level = 0.8)
+toc()
+
+```
+
+```{r}
+leafsync::latticeView(mapview::mapview(version1), mapview::mapview(version2), mapview::mapview(version3), mapview::mapview(version4), mapview::mapview(version5), mapview::mapview(version6))
+```
+
