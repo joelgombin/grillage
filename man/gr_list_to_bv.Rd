@@ -7,13 +7,13 @@
 gr_list_to_bv(
   path,
   code_insee,
-  n = c(50, 50),
+  n = c(150, 150),
   confidence_level = 0.6,
-  numero_bv = `numéro du bureau de vote`,
-  numero_voie = NumeroVoie,
-  libelle_voie = LibelleVoie,
-  code_postal = `Code postal`,
-  ville = VilleLocalite
+  numero_bv = `code du bureau de vote`,
+  numero_voie = `numéro de voie`,
+  libelle_voie = `libellé de voie`,
+  code_postal = `code postal`,
+  ville = commune
 )
 }
 \arguments{

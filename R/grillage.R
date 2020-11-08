@@ -91,40 +91,42 @@ gr_get_enveloppe <- function(code_insee) {
 #' @param ville column containing the name of the city
 #'
 #' @return an sf object containing the (estimated) shape of the polling stations
+#' @import dplyr
+#' @importFrom magrittr %>%
 #' @export
 #'
 
 gr_list_to_bv <- function(path, code_insee, n = c(150, 150), confidence_level = 0.6,
-                        numero_bv = `numéro du bureau de vote`,
-                        numero_voie = NumeroVoie,
-                        libelle_voie = LibelleVoie,
-                        code_postal = `Code postal`,
-                        ville = VilleLocalite) {
-  if (stringr::str_ends(path, coll(".csv"))) {
+                        numero_bv = `code du bureau de vote`,
+                        numero_voie = `numéro de voie`,
+                        libelle_voie = `libellé de voie`,
+                        code_postal = `code postal`,
+                        ville = commune) {
+  if (stringr::str_ends(path, stringr::coll(".csv"))) {
     listes <- readr::read_csv2(path)
-  } else if (str_ends(path, coll(".xls"))) {
+  } else if (stringr::str_ends(path, stringr::coll(".xls"))) {
     listes <- readxl::read_xls(path)
-  } else if (str_ends(path, coll(".xlsx"))) {
+  } else if (stringr::str_ends(path, stringr::coll(".xlsx"))) {
     listes <- readxl::read_xlsx(path)
   }
 
   listes <- listes %>%
     select({{numero_bv}}, {{numero_voie}}, {{libelle_voie}}, {{code_postal}}, {{ville}}) %>%
-    mutate({{code_postal}} := str_pad({{code_postal}}, 5, "left", "0")) %>%
+    mutate({{code_postal}} := stringr::str_pad({{code_postal}}, 5, "left", "0")) %>%
     distinct()
 
   listes <- listes %>%
-    mutate({{libelle_voie}} := str_replace({{libelle_voie}}, "BD ", "Boulevard "),
-           {{libelle_voie}} := str_replace({{libelle_voie}}, "R ", "Rue "),
-           {{libelle_voie}} := str_replace({{libelle_voie}}, "AV ", "Avenue "),
-           {{libelle_voie}} := str_replace({{libelle_voie}}, "CHE ", "Chemin "),
-           {{libelle_voie}} := str_replace({{libelle_voie}}, "IMP ", "Impasse ")) %>%
+    mutate({{libelle_voie}} := stringr::str_replace({{libelle_voie}}, "BD ", "Boulevard "),
+           {{libelle_voie}} := stringr::str_replace({{libelle_voie}}, "R ", "Rue "),
+           {{libelle_voie}} := stringr::str_replace({{libelle_voie}}, "AV ", "Avenue "),
+           {{libelle_voie}} := stringr::str_replace({{libelle_voie}}, "CHE ", "Chemin "),
+           {{libelle_voie}} := stringr::str_replace({{libelle_voie}}, "IMP ", "Impasse ")) %>%
     mutate(adresse = paste0({{numero_voie}}, " ", {{libelle_voie}}),
            code_insee = code_insee) %>%
     banR::geocode_tbl(adresse, code_insee) %>%
     filter(!is.na(longitude), !is.na(latitude)) %>%
-    st_as_sf(coords = c("longitude", "latitude")) %>%
-    st_set_crs(4326)
+    sf::st_as_sf(coords = c("longitude", "latitude")) %>%
+    sf::st_set_crs(4326)
 
   adresses <- listes %>%
     filter(result_score >= confidence_level) %>%
