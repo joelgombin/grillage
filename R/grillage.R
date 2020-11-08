@@ -73,7 +73,7 @@ gr_create_shape <- function(points, id, n = c(150, 150), code_insee = NULL) {
 gr_get_enveloppe <- function(code_insee) {
   correspondance_table <- read.csv("https://gist.githubusercontent.com/Marc-marc-marc/07b0d74e63be682505b49488221b1bb9/raw/d1ec095657796a27bd37efc8e378e1836acdd0a5/gistfile1.txt", sep = "\t", col.names = c("id", "insee"), stringsAsFactors = FALSE)
   id <- correspondance_table[correspondance_table$insee %in% code_insee, "id"]
-  shape <- sf::st_read(glue::glue("http://polygons.openstreetmap.fr/get_geojson.py?id={id}&params=0"))
+  shape <- sf::st_read(glue::glue("http://polygons.openstreetmap.fr/get_geojson.py?id={id}&params=0"), quiet = TRUE)
   shape <- sf::st_collection_extract(shape, "POLYGON")
   return(shape)
 }
