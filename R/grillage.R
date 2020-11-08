@@ -110,6 +110,12 @@ gr_list_to_bv <- function(path, code_insee, n = c(150, 150), confidence_level = 
     listes <- readxl::read_xlsx(path)
   }
 
+  # if there is only one polling station, no need to do complicated stuff
+
+  if ((listes %>% distinct({{numero_bv}}) %>% nrow() %in% 1) {
+    return(gr_get_enveloppe(code_insee))
+  }
+
   listes <- listes %>%
     select({{numero_bv}}, {{numero_voie}}, {{libelle_voie}}, {{code_postal}}, {{ville}}) %>%
     mutate({{code_postal}} := stringr::str_pad({{code_postal}}, 5, "left", "0")) %>%
