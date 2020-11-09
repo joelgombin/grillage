@@ -166,9 +166,8 @@ gr_lists_dpt <- function(dpt, path = "/media/Data/listes électorales IDF 2020/"
   sf_list_to_bv <- purrr::safely(grillage::gr_list_to_bv)
 
   bv <- purrr::map2(paths, codes_insee, function(x,y) {
-    pb$tick()
-    # message(y)
-    sf_list_to_bv(x, code_insee = y, n  = c(50,50))
+    message(y)
+    suppressMessages(sf_list_to_bv(x, code_insee = y, n  = c(50,50)))
   })
 
   bv <- purrr::transpose(bv)[["result"]]
