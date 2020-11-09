@@ -159,7 +159,8 @@ gr_list_to_bv <- function(path, code_insee, n = c(150, 150), confidence_level = 
 gr_lists_dpt <- function(dpt, path = "/media/Data/listes électorales IDF 2020/", out_path = ".") {
 
   paths <- fs::dir_ls(fs::path(path, dpt))
-  codes_insee <- stringr::str_extract(paths, "com[0-9]{5}") %>%
+  # get code insee from the file name. Not robust for DOM/COM though
+  codes_insee <- stringr::str_extract(paths, "[0-9]{1}[0-9AB]{1}[0-9]{3}") %>%
     stringr::str_remove("com")
 
   sf_list_to_bv <- purrr::safely(grillage::gr_list_to_bv)
