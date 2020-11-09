@@ -22,7 +22,8 @@ Imports:
     rlang,
     glue,
     httr,
-    readxl
+    readxl,
+    fs
 RoxygenNote: 7.1.1
 Suggests: 
     knitr,

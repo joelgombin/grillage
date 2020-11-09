@@ -2,6 +2,7 @@
 
 export(gr_create_shape)
 export(gr_list_to_bv)
+export(gr_lists_dpt)
 import(dplyr)
 import(rlang)
 import(sf)

@@ -146,3 +146,31 @@ gr_list_to_bv <- function(path, code_insee, n = c(150, 150), confidence_level = 
 
   return(bv)
 }
+
+
+#' Make polling stations polygons for a whole département
+#'
+#' @param dpt the departement code
+#' @param path the path to the folder where the voters registers are
+#'
+#' @return writes
+#' @export
+#'
+gr_lists_dpt <- function(dpt, path = "/media/Data/listes électorales IDF 2020/", out_path = ".") {
+
+  paths <- fs::dir_ls(fs::path(path, dpt))
+  codes_insee <- stringr::str_extract(paths, "com[0-9]{5}") %>%
+    stringr::str_remove("com")
+
+  sf_list_to_bv <- purrr::safely(grillage::gr_list_to_bv)
+
+  bv <- purrr::map2(paths, codes_insee, function(x,y) {
+    pb$tick()
+    # message(y)
+    sf_list_to_bv(x, code_insee = y, n  = c(50,50))
+  })
+
+  bv <- purrr::transpose(bv)[["result"]]
+  bv <- dplyr::bind_rows(bv)
+  sf::st_write(bv, fs::path(out_path, glue::glue("bv_{dpt}.gpkg")), append = FALSE, delete_dsn = TRUE, delete_layer = TRUE)
+}
