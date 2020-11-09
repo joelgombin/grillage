@@ -7,8 +7,8 @@ Authors@R:
            role = c("aut", "cre"),
            email = "joel.gombin@gmail.com",
            comment = c(ORCID = "0000-0002-9459-4473"))
-Description: Permet de creer des contours de bureaux de vote a partir de la liste electorale, en utilisant uen methode fondee sur la creation d'une grille.
-License: GPL-3
+Description: Permet de creer des contours de bureaux de vote a partir de la liste electorale, en utilisant une methode fondee sur la creation d'une grille.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports: 
