@@ -20,7 +20,9 @@ Imports:
     stringr,
     purrr,
     rlang,
-    glue
+    glue,
+    httr,
+    readxl
 RoxygenNote: 7.1.1
 Suggests: 
     knitr,

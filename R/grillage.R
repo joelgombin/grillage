@@ -71,11 +71,9 @@ gr_create_shape <- function(points, id, n = c(150, 150), code_insee = NULL) {
 
 #' Utilitary function allowing to get the shape of a commune given its code Insee
 gr_get_enveloppe <- function(code_insee) {
-  correspondance_table <- read.csv("https://gist.githubusercontent.com/Marc-marc-marc/07b0d74e63be682505b49488221b1bb9/raw/d1ec095657796a27bd37efc8e378e1836acdd0a5/gistfile1.txt", sep = "\t", col.names = c("id", "insee"), stringsAsFactors = FALSE)
-  id <- correspondance_table[correspondance_table$insee %in% code_insee, "id"]
-  shape <- sf::st_read(glue::glue("http://polygons.openstreetmap.fr/get_geojson.py?id={id}&params=0"), quiet = TRUE)
-  shape <- sf::st_collection_extract(shape, "POLYGON")
-  return(shape)
+  res <- httr::GET("https://geo.api.gouv.fr/communes", query = list(code = code_insee, format = "geojson", geometry = "contour"))
+  httr::content(res, as = "text") %>%
+    sf::st_read(quiet = TRUE)
 }
 
 #' Get polling stations shapes from the voters register
@@ -112,8 +110,12 @@ gr_list_to_bv <- function(path, code_insee, n = c(150, 150), confidence_level = 
 
   # if there is only one polling station, no need to do complicated stuff
 
-  if ((listes %>% distinct({{numero_bv}}) %>% nrow() %in% 1) {
-    return(gr_get_enveloppe(code_insee))
+  if ((listes %>% distinct({{numero_bv}}) %>% nrow()) %in% 1) {
+    bv <- gr_get_enveloppe(code_insee) %>%
+      select(geometry) %>%
+      mutate(polygon = "1",
+             bureau_vote_id = glue::glue("{code_insee}0001"))
+    return(bv)
   }
 
   listes <- listes %>%
@@ -139,7 +141,7 @@ gr_list_to_bv <- function(path, code_insee, n = c(150, 150), confidence_level = 
     distinct(result_id, .keep_all = TRUE)
 
   bv <- adresses %>%
-    grillage::gr_create_shape({{numero_bv}}, n = n, code_insee = code_insee) %>%
+    gr_create_shape({{numero_bv}}, n = n, code_insee = code_insee) %>%
     mutate(bureau_vote_id = paste0(code_insee, stringr::str_pad(polygon, width = 4, pad = "0", side = "left")))
 
   return(bv)
